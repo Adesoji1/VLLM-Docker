@@ -1,0 +1,79 @@
+Processed prompts:   0%|                                                                                                        | 0/1 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s][2024-11-27 09:57:59,456] ERROR in app: Exception on /chat [POST]
+Traceback (most recent call last):
+  File "/home/adesoji/vllm-docker-app/venv/lib/python3.11/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adesoji/vllm-docker-app/venv/lib/python3.11/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adesoji/vllm-docker-app/venv/lib/python3.11/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adesoji/vllm-docker-app/venv/lib/python3.11/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adesoji/vllm-docker-app/app/main.py", line 23, in chat
+    response = llm.generate([user_message], sampling_params=sampling_params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adesoji/vllm-docker-app/venv/lib/python3.11/site-packages/vllm/utils.py", line 1063, in inner
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adesoji/vllm-docker-app/venv/lib/python3.11/site-packages/vllm/entrypoints/llm.py", line 406, in generate
+    outputs = self._run_engine(use_tqdm=use_tqdm)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adesoji/vllm-docker-app/venv/lib/python3.11/site-packages/vllm/entrypoints/llm.py", line 942, in _run_engine
+    step_outputs = self.llm_engine.step()
+                   ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adesoji/vllm-docker-app/venv/lib/python3.11/site-packages/vllm/engine/llm_engine.py", line 1454, in step
+    outputs = self.model_executor.execute_model(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adesoji/vllm-docker-app/venv/lib/python3.11/site-packages/vllm/executor/cpu_executor.py", line 220, in execute_model
+    output = self.driver_method_invoker(self.driver_worker,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adesoji/vllm-docker-app/venv/lib/python3.11/site-packages/vllm/executor/cpu_executor.py", line 373, in _driver_method_invoker
+    return getattr(driver, method)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adesoji/vllm-docker-app/venv/lib/python3.11/site-packages/vllm/worker/worker_base.py", line 319, in execute_model
+    inputs = self.prepare_input(execute_model_req)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adesoji/vllm-docker-app/venv/lib/python3.11/site-packages/vllm/worker/worker_base.py", line 307, in prepare_input
+    return self._get_driver_input_and_broadcast(execute_model_req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adesoji/vllm-docker-app/venv/lib/python3.11/site-packages/vllm/worker/worker_base.py", line 269, in _get_driver_input_and_broadcast
+    self.model_runner.prepare_model_input(
+  File "/home/adesoji/vllm-docker-app/venv/lib/python3.11/site-packages/vllm/worker/cpu_model_runner.py", line 512, in prepare_model_input
+    model_input = self._prepare_model_input_tensors(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adesoji/vllm-docker-app/venv/lib/python3.11/site-packages/vllm/worker/cpu_model_runner.py", line 485, in _prepare_model_input_tensors
+    return builder.build()  # type: ignore
+           ^^^^^^^^^^^^^^^
+  File "/home/adesoji/vllm-docker-app/venv/lib/python3.11/site-packages/vllm/worker/cpu_model_runner.py", line 131, in build
+    multi_modal_kwargs) = self._prepare_prompt(
+                          ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adesoji/vllm-docker-app/venv/lib/python3.11/site-packages/vllm/worker/cpu_model_runner.py", line 305, in _prepare_prompt
+    attn_metadata = self.attn_backend.make_metadata(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adesoji/vllm-docker-app/venv/lib/python3.11/site-packages/vllm/attention/backends/abstract.py", line 52, in make_metadata
+    return cls.get_metadata_cls()(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: XFormersMetadata.__init__() got an unexpected keyword argument 'is_prompt'
+127.0.0.1 - - [27/Nov/2024 09:57:59] "POST /chat HTTP/1.1" 500 -
+
+WARNING 11-27 10:12:29 config.py:1865] Casting torch.bfloat16 to torch.float16.
+INFO 11-27 10:12:34 config.py:350] This model supports multiple tasks: {'embedding', 'generate'}. Defaulting to 'generate'.
+INFO 11-27 10:12:34 llm_engine.py:249] Initializing an LLM engine (v0.6.4.post1) with config: model='Qwen/Qwen2-0.5B-Instruct', speculative_config=None, tokenizer='Qwen/Qwen2-0.5B-Instruct', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, max_seq_len=32768, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto, quantization_param_path=None, device_config=cuda, decoding_config=DecodingConfig(guided_decoding_backend='outlines'), observability_config=ObservabilityConfig(otlp_traces_endpoint=None, collect_model_forward_time=False, collect_model_execute_time=False), seed=0, served_model_name=Qwen/Qwen2-0.5B-Instruct, num_scheduler_steps=1, chunked_prefill_enabled=False multi_step_stream_outputs=True, enable_prefix_caching=False, use_async_output_proc=True, use_cached_outputs=False, chat_template_text_format=string, mm_processor_kwargs=None, pooler_config=None)
+INFO 11-27 10:12:35 selector.py:261] Cannot use FlashAttention-2 backend for Volta and Turing GPUs.
+INFO 11-27 10:12:35 selector.py:144] Using XFormers backend.
+INFO 11-27 10:12:36 model_runner.py:1072] Starting to load model Qwen/Qwen2-0.5B-Instruct...
+INFO 11-27 10:12:37 weight_utils.py:243] Using model weights format ['*.safetensors']
+INFO 11-27 10:12:38 weight_utils.py:288] No model.safetensors.index.json found in remote.
+Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:00<00:00,  1.02it/s]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:00<00:00,  1.02it/s]
+
+INFO 11-27 10:12:39 model_runner.py:1077] Loading model weights took 0.9276 GB
+INFO 11-27 10:12:41 worker.py:232] Memory profiling results: total_gpu_memory=5.78GiB initial_memory_usage=1.08GiB peak_torch_memory=2.37GiB memory_usage_post_profile=1.13GiB non_torch_memory=0.19GiB kv_cache_size=2.64GiB gpu_memory_utilization=0.90
+INFO 11-27 10:12:41 gpu_executor.py:113] # GPU blocks: 14430, # CPU blocks: 21845
+INFO 11-27 10:12:41 gpu_executor.py:117] Maximum concurrency for 32768 tokens per request: 7.05x
+INFO 11-27 10:12:44 model_runner.py:1400] Capturing cudagraphs for decoding. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+INFO 11-27 10:12:44 model_runner.py:1404] If out-of-memory error occurs during cudagraph capture, consider decreasing `gpu_memory_utilization` or switching to eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
